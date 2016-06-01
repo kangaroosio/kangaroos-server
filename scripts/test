@@ -1,0 +1,20 @@
+#!/bin/bash
+
+./scripts/lint
+lintResult=$?
+
+printf "\nRunning backend unit tests with tap:\n\n"
+#tap backend/test/unit/**/*.js -Rlist
+tapUnitResult=$?
+
+printf "\nRunning backend integration tests with tap:\n\n"
+#tap backend/test/integration/**/*.js -Rlist
+tapBackendResult=$?
+
+printf "\nTesting frontend with jest:\n\n"
+BABEL_JEST_STAGE=0 jest
+jestResult=$?
+
+echo "Finished testing."
+
+! (( $lintResult || $tapUnitResult || $tapBackendResult || $jestResult ))
